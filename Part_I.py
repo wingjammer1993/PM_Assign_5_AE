@@ -14,7 +14,7 @@ def give_likelihood_weighting(num_samples):
         uni = np.random.rand() < 1/(1 + math.exp(-(intell - 110)/5))
         salary = np.random.gamma(0.1*intell + major + 3*uni, 5)
         weight = gamma.pdf(salary, 0.1*intell + major + 3*uni, 5)
-        samples[(intell,major,uni,weight)] = weight
+        samples[(intell, major, uni, weight)] = weight
     return samples
 
 
