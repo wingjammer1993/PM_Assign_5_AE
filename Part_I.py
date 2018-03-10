@@ -3,9 +3,7 @@ import math
 import numpy as np
 
 
-# I = 1, M = 2, U = 3, S = 4
 def give_likelihood_weighting(num_samples, salary_weight):
-    # Fix evidence variables
     samples = {}
     for i in range(0, num_samples):
         intell = 100 + np.random.randn()*15
