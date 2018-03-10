@@ -34,12 +34,13 @@ if __name__ == "__main__":
     mean = [1, 0]
     std_dev = np.array([[1, -0.5], [-0.5, 3]])
     dist_x, dist_y = gibbs_sampler(y_in, mean, std_dev, samples)
-    ex = np.linspace(norm.ppf(0.00000000000000001), norm.ppf(0.999999999999999), 100)
+    ex = np.linspace(norm.ppf(0.00001), norm.ppf(0.9999), 100)
+    ex2 = np.linspace(norm.ppf(0.00000000000000001), norm.ppf(0.9999999999999999), 100)
     plt.hist(dist_x, 50, normed=True)
     plt.plot(ex, norm.pdf(ex, 1, 1), 'r-', lw=5, alpha=0.6, label='norm pdf')
     plt.show()
     plt.hist(dist_y, 50, normed=True)
-    plt.plot(ex, norm.pdf(ex, 0, math.sqrt(3)), 'r-', lw=5, alpha=0.6, label='norm pdf')
+    plt.plot(ex, norm.pdf(ex2, 0, 3), 'r-', lw=5, alpha=0.6, label='norm pdf')
     plt.show()
 
 
