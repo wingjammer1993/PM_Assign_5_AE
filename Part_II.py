@@ -39,7 +39,7 @@ if __name__ == "__main__":
     plt.plot(ex, norm.pdf(ex, 1, 1), 'r-', lw=5, alpha=0.6, label='norm pdf')
     plt.show()
     plt.hist(dist_y, 50, normed=True)
-    plt.plot(ex, norm.pdf(ex, 0, 3), 'r-', lw=5, alpha=0.6, label='norm pdf')
+    plt.plot(ex, norm.pdf(ex, 0, math.sqrt(3)), 'r-', lw=5, alpha=0.6, label='norm pdf')
     plt.show()
 
 
