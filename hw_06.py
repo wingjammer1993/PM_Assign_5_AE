@@ -1,28 +1,41 @@
 import pymc3 as pm
 import numpy as np
+import theano
 
-observed_values = [1.]
+g1_prob = np.array([0.5, 0.5])
+
+g2_g1_prob = np.array([[0.9, 0.1], [0.1, 0.9]])
+
+g3_g1_prob = np.array([[0.9, 0.1], [0.1, 0.9]])
+
+x2_mu, x2_sd = np.array([[50, 60],
+                         [3.162, 3.162]])
+
+x3_mu, x3_sd = np.array([[50, 60],
+                         [3.162, 3.162]])
+
 
 with pm.Model() as dna_model:
 
-    g1 = pm.Bernoulli('g1', .5)
+    g1 = pm.Categorical('g1', p=g1_prob)
 
-    p_g2 = pm.Deterministic('p_g2', pm.math.switch(g1, 0.1, 0.9))
+    g2_prob = theano.shared(g2_g1_prob)  # make numpy-->theano
 
-    g2 = pm.Bernoulli('g2', p_g2)
+    g2_0 = g2_prob[g1]  # select the prob array that "happened" thanks to parents
 
-    p_g3 = pm.Deterministic('p_g3', pm.math.switch(g1, 0.1, 0.9))
+    g2 = pm.Categorical('g2', p=g2_0)
 
-    g3 = pm.Bernoulli('g3', p_g3)
+    g3_prob = theano.shared(g3_g1_prob)  # make numpy-->theano
 
-    p_x2 = pm.Deterministic('p_x2', pm.math.switch(g2, pm.Normal(p_x2, 50, 3.1662), pm.Normal('p_x2', 60, 3.1662)))
+    g3_0 = g3_prob[g1]  # select the prob array that "happened" thanks to parents
 
-    x2 = pm.Normal('x2', p_x2)
+    g3 = pm.Categorical('g3', p=g3_0)
 
-    p_x3 = pm.Deterministic('p_x3', pm.math.switch(g2, pm.Normal('p_x3', 50, 3.1662), pm.Normal('p_x3', 60, 3.1662)))
+    x2 = pm.Normal('x2', mu=50 + 10*g2, tau=3.162)
 
-    x3 = pm.Normal('x3', p_x3)
+    x3 = pm.Normal('x3', mu=50 + 10*g3, tau=3.162)
 
 
-mc_mc = pm.Metropolis(dna_model)
-pm.sample(10000, 2000)
+with dna_model:
+    trace = pm.sample(1)
+    print(pm.summary(trace, varnames=['g1', 'g2', 'g3'], start=1))
