@@ -35,7 +35,7 @@ with dna_model:
 
     count = 0
     for i in trace_x1:
-        if 49.5 < trace_x1[i] < 50.5:
+        if 49.5 < i < 50.5:
             count += 1
 
     probability_conditional = count/float(len(trace_x1))
