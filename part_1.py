@@ -1,8 +1,6 @@
 import pymc3 as pm
 import math
 import matplotlib.pyplot as plt
-import theano.tensor
-
 
 with pm.Model() as dna_model:
 
@@ -29,17 +27,10 @@ with dna_model:
     step = pm.Metropolis()
     start = pm.find_MAP()
     trace = pm.sample(10000, step=step, start=start)
-
-    print(pm.summary(trace))
-
     pm.traceplot(trace)
     plt.show()
 
     trace_g1 = trace['g1'][:].tolist()
-    trace_g2 = trace['g2'][:].tolist()
-    trace_g3 = trace['g3'][:].tolist()
-    trace_x1 = trace['x1'][:].tolist()
-    trace_x3 = trace['x3'][:].tolist()
 
     count = 0
     for i in trace_g1:

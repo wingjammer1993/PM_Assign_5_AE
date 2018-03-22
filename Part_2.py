@@ -19,34 +19,30 @@ with pm.Model() as dna_model:
 
     x1 = pm.Normal('x1', var_1, math.sqrt(10))
 
-    x2 = pm.Normal('x2', var_2, math.sqrt(10),observed=50)
+    x2 = pm.Normal('x2', var_2, math.sqrt(10), observed=50)
 
     x3 = pm.Normal('x3', var_3, math.sqrt(10))
 
 with dna_model:
 
     step = pm.Metropolis()
-
-    trace = pm.sample(10000, step=step)
-
-    print(pm.summary(trace))
-
+    start = pm.find_MAP()
+    trace = pm.sample(10000, step=step, start=start)
     pm.traceplot(trace)
-
-    trace_g1 = trace['g1'][:]
-    trace_g2 = trace['g2'][:]
-    trace_g3 = trace['g3'][:]
-    trace_x1 = trace['x1'][:]
-    trace_x2 = trace['x2'][:]
-    trace_x3 = trace['x3'][:]
     plt.show()
 
-    plt.hist(trace_x1)
-    plt.hist(trace_x2)
-    plt.hist(trace_x3)
-    plt.show()
+    trace_x1 = trace['x1'][:].tolist()
 
-    print(trace_g1, trace_g2, trace_g3, trace_x1, trace_x2, trace_x3)
+    count = 0
+    for i in trace_x1:
+        if 49.5 < trace_x1[i] < 50.5:
+            count += 1
+
+    probability_conditional = count/float(len(trace_x1))
+
+    print(probability_conditional)
+
+
 
 
 
